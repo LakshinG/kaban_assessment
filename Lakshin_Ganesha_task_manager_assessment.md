@@ -2,7 +2,7 @@
 **Candidate:** Lakshin Ganesha  
 **Project:** Kanban Task Board — Full-Stack Challenge  
 
-*APP LINK:* kaban-assessment.vercel.app
+## APP LINK: kaban-assessment.vercel.app
 
 ---
 
