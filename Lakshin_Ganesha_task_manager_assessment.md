@@ -4,7 +4,7 @@
 ## App Link: https://kaban-assessment.vercel.app
 
 ## Overview
-This repository contains a full-stack Kanban board application built for the Task Management Assessment. It features a modern, drag-and-drop interface inspired by tools like Linear and Notion, backed by a robust PostgreSQL database with real-time capabilities via Supabase.
+This repository contains a professional, comprehensive Kanban board application built with React, TypeScript, Vite, and Supabase. Designed with a premium aesthetic, featuring deep dark modes, micro-animations, and full relational database support for advanced task management.
 
 ## Tech Stack
 * **Frontend:** React, TypeScript, Vite
