@@ -89,9 +89,12 @@ export const useTasks = () => {
       // Optimistic update
       setTasks(prev => prev.map(t => t.id === id ? { ...t, ...updates } : t));
       
+      // Strip relational fields before updating
+      const { team_members, labels, ...safeUpdates } = updates as any;
+      
       const { error } = await supabase
         .from('tasks')
-        .update(updates)
+        .update(safeUpdates)
         .eq('id', id);
 
       if (error) {
@@ -171,7 +174,11 @@ export const useTasks = () => {
       const changes = newTasks.filter(nt => {
         const ot = tasks.find(t => t.id === nt.id);
         return ot && (ot.status !== nt.status || ot.position !== nt.position);
-      }).map(t => ({ ...t }));
+      }).map(t => {
+        // IMPORTANT: Strip relation properties before upserting to avoid schema cache errors
+        const { team_members, labels, ...safeTask } = t as any;
+        return safeTask;
+      });
 
       if (changes.length > 0) {
         const { error } = await supabase
