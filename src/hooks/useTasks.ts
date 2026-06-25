@@ -13,20 +13,39 @@ export const useTasks = () => {
     if (!user) return;
     try {
       setLoading(true);
-      const { data, error } = await supabase
+      const { data: tasksData, error: tasksError } = await supabase
         .from('tasks')
-        .select('*, task_assignees(team_members(*)), task_labels(labels(*))')
+        .select('*')
         .eq('user_id', user.id)
         .order('position', { ascending: true })
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (tasksError) throw tasksError;
+
+      // Fetch relations separately to bypass any PostgREST schema cache join issues
+      const { data: assigneesData, error: assigneesError } = await supabase
+        .from('task_assignees')
+        .select('task_id, team_members(*)')
+        .eq('user_id', user.id);
+        
+      if (assigneesError) throw assigneesError;
+
+      const { data: labelsData, error: labelsError } = await supabase
+        .from('task_labels')
+        .select('task_id, labels(*)')
+        .eq('user_id', user.id);
+
+      if (labelsError) throw labelsError;
       
-      // Manually flatten the relational data in TypeScript
-      const formattedData = (data || []).map((task: any) => ({
+      // Stitch the data together manually
+      const formattedData = (tasksData || []).map((task: any) => ({
         ...task,
-        team_members: task.task_assignees ? task.task_assignees.map((ta: any) => ta.team_members) : [],
-        labels: task.task_labels ? task.task_labels.map((tl: any) => tl.labels) : []
+        team_members: (assigneesData || [])
+          .filter(a => a.task_id === task.id)
+          .map(a => a.team_members),
+        labels: (labelsData || [])
+          .filter(l => l.task_id === task.id)
+          .map(l => l.labels)
       }));
       
       setTasks(formattedData);
