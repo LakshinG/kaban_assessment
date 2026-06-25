@@ -106,20 +106,45 @@ export const useTaskDetails = (taskId: string | null) => {
     if (!user) return;
     try {
       // 1. Sync Labels
-      await supabase.from('task_labels').delete().eq('task_id', id);
+      const { error: d1 } = await supabase.from('task_labels').delete().eq('task_id', id);
+      if (d1) throw new Error("Task labels delete error: " + d1.message);
+
       if (labelIds.length > 0) {
-        const labelInserts = labelIds.map(label_id => ({ task_id: id, label_id }));
-        await supabase.from('task_labels').insert(labelInserts);
+        // Try with user_id first
+        let labelInserts = labelIds.map(label_id => ({ task_id: id, label_id, user_id: user.id }));
+        let { error: i1 } = await supabase.from('task_labels').insert(labelInserts);
+        
+        if (i1 && i1.message.includes('user_id')) {
+          // Fallback if user_id column is missing
+          const safeInserts = labelIds.map(label_id => ({ task_id: id, label_id }));
+          const { error: i1Fallback } = await supabase.from('task_labels').insert(safeInserts);
+          if (i1Fallback) throw new Error("Task labels insert fallback error: " + i1Fallback.message);
+        } else if (i1) {
+          throw new Error("Task labels insert error: " + i1.message);
+        }
       }
 
       // 2. Sync Assignees
-      await supabase.from('task_assignees').delete().eq('task_id', id);
+      const { error: d2 } = await supabase.from('task_assignees').delete().eq('task_id', id);
+      if (d2) throw new Error("Task assignees delete error: " + d2.message);
+
       if (assigneeIds.length > 0) {
-        const assigneeInserts = assigneeIds.map(team_member_id => ({ task_id: id, team_member_id }));
-        await supabase.from('task_assignees').insert(assigneeInserts);
+        // Try with user_id first
+        let assigneeInserts = assigneeIds.map(team_member_id => ({ task_id: id, team_member_id, user_id: user.id }));
+        let { error: i2 } = await supabase.from('task_assignees').insert(assigneeInserts);
+        
+        if (i2 && i2.message.includes('user_id')) {
+          // Fallback if user_id column is missing
+          const safeInserts = assigneeIds.map(team_member_id => ({ task_id: id, team_member_id }));
+          const { error: i2Fallback } = await supabase.from('task_assignees').insert(safeInserts);
+          if (i2Fallback) throw new Error("Task assignees insert fallback error: " + i2Fallback.message);
+        } else if (i2) {
+          throw new Error("Task assignees insert error: " + i2.message);
+        }
       }
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      console.error("Sync Task Relations Error:", err);
+      alert("Failed to save labels or assignees to the database: " + (err.message || "Unknown error"));
     }
   };
 
