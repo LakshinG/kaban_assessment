@@ -15,13 +15,21 @@ export const useTasks = () => {
       setLoading(true);
       const { data, error } = await supabase
         .from('tasks')
-        .select('*, team_members!task_assignees(*), labels!task_labels(*)')
+        .select('*, task_assignees(team_members(*)), task_labels(labels(*))')
         .eq('user_id', user.id)
         .order('position', { ascending: true })
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setTasks(data || []);
+      
+      // Manually flatten the relational data in TypeScript
+      const formattedData = (data || []).map((task: any) => ({
+        ...task,
+        team_members: task.task_assignees ? task.task_assignees.map((ta: any) => ta.team_members) : [],
+        labels: task.task_labels ? task.task_labels.map((tl: any) => tl.labels) : []
+      }));
+      
+      setTasks(formattedData);
     } catch (err: any) {
       setError(err.message);
     } finally {
