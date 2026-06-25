@@ -1,12 +1,12 @@
-# Next Play Games - Internship Assessment
-**Candidate:** Lakshin Ganesha  
+# Next Play Games - Taskboard Internship Assessment
+**Name:** Lakshin Ganesha  
 **Project:** Kanban Task Board — Full-Stack Challenge  
 
 ## APP LINK: kaban-assessment.vercel.app
 
 ---
 
-## 🚀 Overview
+## Overview
 
 This submission is a high-fidelity, fully-functional Kanban task board heavily inspired by the sophisticated, minimal design systems of tools like **Linear** and **Notion**. 
 
@@ -14,7 +14,7 @@ The application is built to be fast, responsive, and seamlessly real-time, utili
 
 ---
 
-## 🛠️ Architecture & Tech Stack
+## Architecture & Tech Stack
 
 ### Frontend
 * **React 18 & Vite:** For blazing-fast compilation and a robust component lifecycle.
@@ -30,7 +30,7 @@ The application is built to be fast, responsive, and seamlessly real-time, utili
 
 ---
 
-## ✨ Advanced Features Implemented
+##  Advanced Features Implemented
 
 1. **Intelligent Drag & Drop:**
    Physics-based drag interactions with smooth `transition-all duration-200 ease-out` easings. Drops instantly trigger optimistic UI state updates so the interface never feels blocked by network latency.
@@ -49,7 +49,7 @@ The application is built to be fast, responsive, and seamlessly real-time, utili
 
 ---
 
-## 🎨 Design Philosophy
+##  Design Philosophy
 
 Design was treated as a top-tier priority. Generic UI components were avoided in favor of a bespoke aesthetic:
 * **Micro-interactions:** Cards feature a physical "lift" (`hover:-translate-y-1 hover:scale-[1.01] hover:shadow-lg`) and borders light up when interacted with, creating a tactile feel.
@@ -58,7 +58,7 @@ Design was treated as a top-tier priority. Generic UI components were avoided in
 
 ---
 
-## 🗄️ Database Schema & RLS
+##  Database Schema & RLS
 
 Below is the complete SQL schema and security policies running in Supabase:
 
@@ -92,7 +92,7 @@ CREATE POLICY "Users can delete their own tasks" ON public.tasks FOR DELETE USIN
 
 ---
 
-## 🚀 Setup & Deployment
+##  Setup & Deployment
 
 ### Run Locally
 1. Clone the repository and run `npm install`.
