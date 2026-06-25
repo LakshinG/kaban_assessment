@@ -108,14 +108,14 @@ export const useTaskDetails = (taskId: string | null) => {
       // 1. Sync Labels
       await supabase.from('task_labels').delete().eq('task_id', id);
       if (labelIds.length > 0) {
-        const labelInserts = labelIds.map(label_id => ({ task_id: id, label_id, user_id: user.id }));
+        const labelInserts = labelIds.map(label_id => ({ task_id: id, label_id }));
         await supabase.from('task_labels').insert(labelInserts);
       }
 
       // 2. Sync Assignees
       await supabase.from('task_assignees').delete().eq('task_id', id);
       if (assigneeIds.length > 0) {
-        const assigneeInserts = assigneeIds.map(team_member_id => ({ task_id: id, team_member_id, user_id: user.id }));
+        const assigneeInserts = assigneeIds.map(team_member_id => ({ task_id: id, team_member_id }));
         await supabase.from('task_assignees').insert(assigneeInserts);
       }
     } catch (err) {
