@@ -23,19 +23,25 @@ export const useTasks = () => {
       if (tasksError) throw tasksError;
 
       // Fetch relations separately to bypass any PostgREST schema cache join issues
-      const { data: assigneesData, error: assigneesError } = await supabase
-        .from('task_assignees')
-        .select('task_id, team_members(*)')
-        .eq('user_id', user.id);
-        
-      if (assigneesError) throw assigneesError;
+      let assigneesData: any[] = [];
+      let labelsData: any[] = [];
+      
+      const taskIds = tasksData?.map(t => t.id) || [];
+      if (taskIds.length > 0) {
+        const { data: aData, error: assigneesError } = await supabase
+          .from('task_assignees')
+          .select('task_id, team_members(*)');
+          
+        if (assigneesError) throw assigneesError;
+        assigneesData = aData || [];
 
-      const { data: labelsData, error: labelsError } = await supabase
-        .from('task_labels')
-        .select('task_id, labels(*)')
-        .eq('user_id', user.id);
+        const { data: lData, error: labelsError } = await supabase
+          .from('task_labels')
+          .select('task_id, labels(*)');
 
-      if (labelsError) throw labelsError;
+        if (labelsError) throw labelsError;
+        labelsData = lData || [];
+      }
       
       // Stitch the data together manually
       const formattedData = (tasksData || []).map((task: any) => ({
