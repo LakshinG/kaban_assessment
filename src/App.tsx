@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from './contexts/AuthContext';
 import Header from './components/Header';
 import Board from './components/Board';
 import { Loader2 } from 'lucide-react';
 
 function App() {
-  const { user, loading: authLoading } = useAuth();
+  const { loading: authLoading } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [priorityFilter, setPriorityFilter] = useState<string>('all');
 

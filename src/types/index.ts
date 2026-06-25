@@ -1,6 +1,37 @@
 export type TaskStatus = 'todo' | 'in_progress' | 'in_review' | 'done';
 export type TaskPriority = 'low' | 'normal' | 'high';
 
+export interface TeamMember {
+  id: string;
+  name: string;
+  color: string;
+  user_id: string;
+  created_at: string;
+}
+
+export interface Label {
+  id: string;
+  name: string;
+  color: string;
+  user_id: string;
+  created_at: string;
+}
+
+export interface TaskLabel {
+  task_id: string;
+  label_id: string;
+  user_id: string;
+  labels?: Label; // from join
+}
+
+export interface Comment {
+  id: string;
+  task_id: string;
+  content: string;
+  user_id: string;
+  created_at: string;
+}
+
 export interface Task {
   id: string;
   title: string;
@@ -12,7 +43,11 @@ export interface Task {
   user_id: string;
   created_at: string;
   updated_at: string;
+  
+  // Relations mapped by Supabase select
+  task_assignees?: { team_members: TeamMember }[];
+  task_labels?: { labels: Label }[];
 }
 
-export type NewTask = Omit<Task, 'id' | 'created_at' | 'updated_at' | 'user_id'>;
-export type UpdateTask = Partial<Omit<Task, 'id' | 'created_at' | 'updated_at' | 'user_id'>>;
+export type NewTask = Omit<Task, 'id' | 'created_at' | 'updated_at' | 'user_id' | 'task_assignees' | 'task_labels'>;
+export type UpdateTask = Partial<NewTask>;

@@ -15,7 +15,7 @@ export const useTasks = () => {
       setLoading(true);
       const { data, error } = await supabase
         .from('tasks')
-        .select('*')
+        .select('*, task_assignees(team_members(*)), task_labels(labels(*))')
         .eq('user_id', user.id)
         .order('position', { ascending: true })
         .order('created_at', { ascending: false });
@@ -172,5 +172,5 @@ export const useTasks = () => {
     }
   };
 
-  return { tasks, loading, error, addTask, updateTask, moveTask, deleteTask };
+  return { tasks, loading, error, addTask, updateTask, moveTask, deleteTask, fetchTasks };
 };

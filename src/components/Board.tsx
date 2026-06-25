@@ -27,7 +27,7 @@ interface BoardProps {
 const COLUMNS: TaskStatus[] = ['todo', 'in_progress', 'in_review', 'done'];
 
 const Board: React.FC<BoardProps> = ({ searchQuery, priorityFilter }) => {
-  const { tasks, loading, error, addTask, updateTask, moveTask, deleteTask } = useTasks();
+  const { tasks, loading, error, addTask, updateTask, moveTask, deleteTask, fetchTasks } = useTasks();
   
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   
@@ -81,7 +81,7 @@ const Board: React.FC<BoardProps> = ({ searchQuery, priorityFilter }) => {
     if (task) setActiveTask(task);
   };
 
-  const handleDragOver = (event: DragOverEvent) => {
+  const handleDragOver = (_event: DragOverEvent) => {
     // Optional: implement if you want real-time rearranging during drag
   };
 
@@ -133,10 +133,16 @@ const Board: React.FC<BoardProps> = ({ searchQuery, priorityFilter }) => {
   const handleSaveTask = async (taskData: Partial<Task>) => {
     if (editingTask) {
       await updateTask(editingTask.id, taskData);
+      return editingTask.id;
     } else {
-      await addTask(taskData as Omit<Task, 'id' | 'created_at' | 'updated_at' | 'user_id' | 'position'>);
+      const newTask = await addTask(taskData as Omit<Task, 'id' | 'created_at' | 'updated_at' | 'user_id' | 'position'>);
+      return newTask?.id;
     }
+  };
+
+  const handleCloseModal = () => {
     setIsModalOpen(false);
+    fetchTasks(); // Refetch to catch any label/assignee changes
   };
 
   if (loading) {
@@ -207,11 +213,12 @@ const Board: React.FC<BoardProps> = ({ searchQuery, priorityFilter }) => {
       {isModalOpen && (
         <TaskModal
           isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          onClose={handleCloseModal}
           onSave={handleSaveTask}
-          onDelete={editingTask ? () => { deleteTask(editingTask.id); setIsModalOpen(false); } : undefined}
+          onDelete={editingTask ? () => { deleteTask(editingTask.id); setIsModalOpen(false); fetchTasks(); } : undefined}
           task={editingTask}
           initialStatus={initialStatus}
+          onRefetch={fetchTasks}
         />
       )}
     </>
