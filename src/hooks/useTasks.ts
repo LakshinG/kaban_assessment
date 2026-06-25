@@ -15,7 +15,7 @@ export const useTasks = () => {
       setLoading(true);
       const { data, error } = await supabase
         .from('tasks')
-        .select('*, task_assignees(team_members(*)), task_labels(labels(*))')
+        .select('*, team_members!task_assignees(*), labels!task_labels(*)')
         .eq('user_id', user.id)
         .order('position', { ascending: true })
         .order('created_at', { ascending: false });

@@ -45,9 +45,9 @@ export interface Task {
   updated_at: string;
   
   // Relations mapped by Supabase select
-  task_assignees?: { team_members: TeamMember }[];
-  task_labels?: { labels: Label }[];
+  team_members?: TeamMember[];
+  labels?: Label[];
 }
 
-export type NewTask = Omit<Task, 'id' | 'created_at' | 'updated_at' | 'user_id' | 'task_assignees' | 'task_labels'>;
+export type NewTask = Omit<Task, 'id' | 'created_at' | 'updated_at' | 'user_id' | 'team_members' | 'labels'>;
 export type UpdateTask = Partial<NewTask>;

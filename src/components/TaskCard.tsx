@@ -77,12 +77,12 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onClick }) => {
       className="bg-surfaceHover border border-zinc-700 shadow-sm hover:shadow-lg hover:-translate-y-1 hover:scale-[1.01] rounded-lg p-3.5 cursor-grab active:cursor-grabbing hover:border-zinc-500 transition-all duration-200 ease-out group relative"
     >
       <div className="flex flex-col gap-3">
-        {task.task_labels && task.task_labels.length > 0 && (
+        {task.labels && task.labels.length > 0 && (
           <div className="flex flex-wrap gap-1 mb-1">
-            {task.task_labels.map((tl: any) => (
-              <span key={tl.labels.id} className="text-[9px] px-1.5 py-0.5 rounded border border-zinc-700 bg-zinc-800 flex items-center gap-1 text-zinc-300">
-                <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: tl.labels.color }} />
-                {tl.labels.name}
+            {task.labels.map((l: any) => (
+              <span key={l.id} className="text-[9px] px-1.5 py-0.5 rounded border border-zinc-700 bg-zinc-800 flex items-center gap-1 text-zinc-300">
+                <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: l.color }} />
+                {l.name}
               </span>
             ))}
           </div>
@@ -106,16 +106,16 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onClick }) => {
             </div>
           )}
 
-          {task.task_assignees && task.task_assignees.length > 0 && (
+          {task.team_members && task.team_members.length > 0 && (
             <div className="ml-auto flex -space-x-1.5">
-              {task.task_assignees.map((ta, i) => (
+              {task.team_members.map((tm, i) => (
                 <div 
-                  key={ta.team_members.id}
+                  key={tm.id}
                   className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold text-white shrink-0 border border-zinc-800"
-                  style={{ backgroundColor: ta.team_members.color, zIndex: 10 - i }}
-                  title={`Assigned to ${ta.team_members.name}`}
+                  style={{ backgroundColor: tm.color, zIndex: 10 - i }}
+                  title={`Assigned to ${tm.name}`}
                 >
-                  {ta.team_members.name.charAt(0).toUpperCase()}
+                  {tm.name.charAt(0).toUpperCase()}
                 </div>
               ))}
             </div>

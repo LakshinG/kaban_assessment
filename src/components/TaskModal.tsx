@@ -60,8 +60,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({
       setStatus(task.status);
       setPriority(task.priority);
       setDueDate(task.due_date ? format(new Date(task.due_date), 'yyyy-MM-dd') : '');
-      setActiveLabelIds(task.task_labels?.map(tl => tl.labels.id) || []);
-      setActiveAssigneeIds(task.task_assignees?.map(ta => ta.team_members.id) || []);
+      setActiveLabelIds(task.labels?.map(l => l.id) || []);
+      setActiveAssigneeIds(task.team_members?.map(tm => tm.id) || []);
       fetchDetails();
     } else {
       setTitle('');
