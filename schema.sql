@@ -1,7 +1,6 @@
--- Enable UUID extension if not already enabled
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- Create the tasks table
+-- tasks table
 CREATE TABLE IF NOT EXISTS public.tasks (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     title TEXT NOT NULL,
@@ -15,7 +14,6 @@ CREATE TABLE IF NOT EXISTS public.tasks (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- Set up Row Level Security (RLS)
 ALTER TABLE public.tasks ENABLE ROW LEVEL SECURITY;
 
 -- Create policies for anonymous guest access (tied to user_id)
