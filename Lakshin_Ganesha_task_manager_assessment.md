@@ -1,4 +1,4 @@
-# Task Management Application Assessment
+# Kaban Task Manager
 **Name:** Lakshin Ganesha
 
 ## App Link: https://kaban-assessment.vercel.app
@@ -29,14 +29,8 @@ This repository contains a professional, comprehensive Kanban board application 
 - [x] **Labels:** Custom color-coded labels that can be created, applied, and multi-selected on tasks.
 - [x] **Task Comments:** A chronological, real-time activity feed inside the task detail modal.
 
-## Design Philosophy
-The UI was meticulously crafted to provide a premium, "wow" factor:
-* **Color Palette:** Deep, muted dark mode using Tailwind's `zinc` palette with subtle border outlines.
-* **Micro-interactions:** Cards feature a slight upward spring animation (`hover:-translate-y-1`) and a distinct glowing drop-shadow on hover to lift off the board.
-* **Component Architecture:** The `TaskModal` utilizes a dual-pane layout separating the active discussion feed from metadata properties, ensuring readability and focus.
-
 ## Database Architecture
-The application leverages Supabase with strict **Row-Level Security (RLS)** ensuring isolated environments.
+The application leverages Supabase with strict **Row-Level Security** ensuring isolated environments.
 1. `tasks`: Core task data.
 2. `team_members`: Defines assignees (Name, Color).
 3. `task_assignees`: Many-to-many join table linking tasks to multiple team members.
@@ -45,3 +39,42 @@ The application leverages Supabase with strict **Row-Level Security (RLS)** ensu
 6. `comments`: Text feed entries bound to a specific task.
 
 *(See `schema_update.sql` and `schema_update_assignees.sql` for the raw migrations)*
+
+
+## Local Setup
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/LakshinG/Intern_task.git
+   cd Intern_task
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Environment Variables:**
+   Create a `.env` file in the root directory and add your Supabase credentials:
+   ```env
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+
+4. **Database Migration:**
+   To enable all advanced features, you must run the provided SQL scripts in your Supabase SQL Editor in this order:
+   * `schema_update.sql` (Creates core relations, labels, and comments)
+   * `schema_update_assignees.sql` (Migrates tasks to support multiple assignees via a join table)
+
+5. **Run the Development Server:**
+   ```bash
+   npm run dev
+   ```
+   The app will be live at `http://localhost:5173`.
+
+## Build for Production
+
+```bash
+npm run build
+```
+This generates an optimized static bundle in the `dist` folder.
