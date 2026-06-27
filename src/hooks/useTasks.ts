@@ -96,7 +96,7 @@ export const useTasks = () => {
       setTasks(prev => prev.map(t => t.id === id ? { ...t, ...updates } : t));
       
       // Strip relational fields before updating
-      const { team_members, labels, ...safeUpdates } = updates as any;
+      const { team_members: _team_members, labels: _labels, ...safeUpdates } = updates as any;
       
       const { error } = await supabase
         .from('tasks')
@@ -182,7 +182,7 @@ export const useTasks = () => {
         return ot && (ot.status !== nt.status || ot.position !== nt.position);
       }).map(t => {
         // IMPORTANT: Strip relation properties before upserting to avoid schema cache errors
-        const { team_members, labels, ...safeTask } = t as any;
+        const { team_members: _team_members, labels: _labels, ...safeTask } = t as any;
         return safeTask;
       });
 
